@@ -1,0 +1,1302 @@
+<!doctype html>
+
+<html lang="he" dir="rtl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             SECURITY HEADERS — Enterprise browser-enforced controls
+             Note: these meta-tag equivalents are honoured by all modern
+             browsers. Definitive server-sent headers must be set at the
+             reverse-proxy / CDN layer (Cloudflare, nginx) in production.
+             ═══════════════════════════════════════════════════════════════ -->
+
+        <!-- Content Security Policy
+             Principle of least privilege: each directive whitelists only the
+             origins this app actually needs. 'unsafe-inline' in script-src is
+             required by the current architecture (inline onclick= handlers and
+             the theme-detection inline script). Removal requires a Phase 2
+             refactor to addEventListener-only event binding.
+             'upgrade-insecure-requests' forces all http:// sub-resources to
+             https:// automatically, protecting mixed-content scenarios. -->
+        <meta http-equiv="Content-Security-Policy" content="
+            default-src 'none';
+            script-src 'self' 'unsafe-inline'
+                https://unpkg.com
+                https://www.youtube.com https://www.youtube-nocookie.com
+                https://accounts.google.com;
+            style-src 'self' 'unsafe-inline'
+                https://fonts.googleapis.com
+                https://unpkg.com;
+            img-src 'self' data: blob:
+                https://i.postimg.cc
+                https://m.media-amazon.com
+                https://*.tile.openstreetmap.org
+                https://c4.wallpaperflare.com
+                https://beachconcierge.ae;
+            font-src 'self' https://fonts.gstatic.com;
+            connect-src 'self'
+                https://api.open-meteo.com
+                https://marine-api.open-meteo.com
+                https://nominatim.openstreetmap.org
+                https://ipapi.co
+                https://beachconcierge.ae;
+            frame-src https://www.youtube.com https://www.youtube-nocookie.com;
+            media-src 'self' blob:;
+            object-src 'none';
+            base-uri 'self';
+            form-action 'self';
+            upgrade-insecure-requests;
+        " />
+
+        <!-- Prevents MIME-type sniffing attacks (e.g. serving a JS file
+             disguised as an image and having it executed as script). -->
+        <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+
+        <!-- X-Frame-Options: DENY is the clickjacking defence.
+             NOTE: browsers require this as an HTTP response header — the
+             meta-tag form is ignored. This tag documents intent; the
+             authoritative enforcement must be set at the Cloudflare / nginx
+             layer in production:
+               add_header X-Frame-Options "DENY" always;
+             The CSP frame-ancestors directive below achieves the same effect
+             in CSP Level 2+ browsers and is honoured as a meta tag. -->
+        <!-- meta http-equiv="X-Frame-Options" content="DENY" /-->
+
+        <!-- Limits the Referer header sent on cross-origin navigation so
+             the full URL path is never leaked to third-party domains. -->
+        <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+
+        <!-- Permissions Policy: grant camera/mic/geo (used for tan scanner,
+             noise monitor, delivery tracking) and explicitly deny payment
+             and USB so no rogue script can request them. -->
+        <meta http-equiv="Permissions-Policy"
+              content="camera=(self), microphone=(self), geolocation=(self), payment=(), usb=()" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="theme-color" content="#001d3d" />
+
+        <title>Beach Concierge Dubai — VIP Beach Delivery | Food, Drinks & Equipment to Your Sunbed</title>
+        <meta name="description" content="Premium beach concierge service in Dubai. Order food, drinks, sunscreen, towels and VIP experiences delivered directly to your sunbed. Fast delivery, loyalty points, multilingual service." />
+        <meta name="keywords" content="beach concierge Dubai, beach delivery Dubai, VIP beach service, beach food delivery, sunbed delivery Dubai, beach drinks Dubai, JBR beach service, Dubai Marina beach" />
+        <meta name="author" content="Beach Concierge Dubai" />
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+        <link rel="canonical" href="https://beachconcierge.ae/" />
+
+        <!-- Geo / Local SEO -->
+        <meta name="geo.region" content="AE-DU" />
+        <meta name="geo.placename" content="Dubai, United Arab Emirates" />
+        <meta name="geo.position" content="25.0757;55.1328" />
+        <meta name="ICBM" content="25.0757, 55.1328" />
+
+        <!-- App / PWA metadata -->
+        <meta name="application-name" content="Beach Concierge Dubai" />
+        <meta name="apple-mobile-web-app-title" content="Beach Concierge" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="format-detection" content="telephone=no" />
+
+        <!-- Language / Content -->
+        <meta http-equiv="content-language" content="en, he, ar, ru, es, fr" />
+        <meta name="rating" content="general" />
+        <meta name="revisit-after" content="3 days" />
+
+        <!-- hreflang for multilingual SEO -->
+        <link rel="alternate" hreflang="en" href="https://beachconcierge.ae/" />
+        <link rel="alternate" hreflang="he" href="https://beachconcierge.ae/?lang=he" />
+        <link rel="alternate" hreflang="ar" href="https://beachconcierge.ae/?lang=ar" />
+        <link rel="alternate" hreflang="ru" href="https://beachconcierge.ae/?lang=ru" />
+        <link rel="alternate" hreflang="es" href="https://beachconcierge.ae/?lang=es" />
+        <link rel="alternate" hreflang="fr" href="https://beachconcierge.ae/?lang=fr" />
+        <link rel="alternate" hreflang="x-default" href="https://beachconcierge.ae/" />
+
+        <!-- Open Graph / Social -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://beachconcierge.ae/" />
+        <meta property="og:site_name" content="Beach Concierge Dubai" />
+        <meta property="og:title" content="Beach Concierge Dubai — VIP Beach Delivery" />
+        <meta property="og:description" content="Order food, drinks, sunscreen and VIP experiences delivered directly to your sunbed on the beach in Dubai. Fast, premium, multilingual concierge service." />
+        <meta property="og:image" content="https://i.postimg.cc/m2FK50jJ/IMG-2359.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="Beach Concierge Dubai — VIP beach delivery service" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:locale:alternate" content="he_IL" />
+        <meta property="og:locale:alternate" content="ar_AE" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@BeachConciergeAE" />
+        <meta name="twitter:title" content="Beach Concierge Dubai — VIP Beach Delivery" />
+        <meta name="twitter:description" content="Order food, drinks and VIP experiences delivered to your sunbed in Dubai. Fast beach concierge service." />
+        <meta name="twitter:image" content="https://i.postimg.cc/m2FK50jJ/IMG-2359.jpg" />
+
+        <!-- JSON-LD: FoodService (primary) -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": ["FoodService","LocalBusiness"],
+            "name": "Beach Concierge Dubai",
+            "alternateName": ["Beach Concierge AE","חוף קונסיירז' דובאי","بيتش كونسيرج دبي"],
+            "description": "Premium VIP beach concierge and delivery service on Dubai's JBR Beach. Food, drinks, equipment and VIP experiences delivered directly to your sunbed. Available in 6 languages.",
+            "url": "https://beachconcierge.ae/",
+            "logo": { "@type": "ImageObject", "url": "https://i.postimg.cc/m2FK50jJ/IMG-2359.jpg", "width": 512, "height": 512 },
+            "image": [
+                "https://i.postimg.cc/m2FK50jJ/IMG-2359.jpg",
+                "https://i.postimg.cc/zBjcnNJp/IMG-2506.jpg"
+            ],
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "JBR — The Walk",
+                "addressLocality": "Dubai",
+                "addressRegion": "Dubai",
+                "postalCode": "00000",
+                "addressCountry": "AE"
+            },
+            "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "25.0757",
+                "longitude": "55.1328"
+            },
+            "areaServed": {
+                "@type": "Place",
+                "name": "JBR Beach, Dubai Marina Beach, Dubai"
+            },
+            "openingHoursSpecification": {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+                "opens": "08:00",
+                "closes": "21:00"
+            },
+            "priceRange": "AED 10–350",
+            "currenciesAccepted": "AED",
+            "paymentAccepted": "Cash, Credit Card",
+            "servesCuisine": ["Beach Food","Beverages","Snacks","Ice Cream","Fresh Fruit"],
+            "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Beach Delivery Menu",
+                "itemListElement": [
+                    { "@type": "Offer", "name": "Watermelon Slice with Bulgarian Cheese", "price": "30", "priceCurrency": "AED" },
+                    { "@type": "Offer", "name": "Ice Popsicle (Artic)", "price": "10", "priceCurrency": "AED" },
+                    { "@type": "Offer", "name": "Premium Ice Cream", "price": "20", "priceCurrency": "AED" },
+                    { "@type": "Offer", "name": "Mineral Water 1.5L", "price": "15", "priceCurrency": "AED" },
+                    { "@type": "Offer", "name": "Sunscreen SPF 50 Spray", "price": "45", "priceCurrency": "AED" },
+                    { "@type": "Offer", "name": "Sunbed & Umbrella Rental", "price": "80", "priceCurrency": "AED" },
+                    { "@type": "Offer", "name": "VIP Cabana Experience", "price": "350", "priceCurrency": "AED" }
+                ]
+            },
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.9",
+                "reviewCount": "124",
+                "bestRating": "5"
+            },
+            "sameAs": [
+                "https://www.instagram.com/beachconcierge.ae",
+                "https://www.tiktok.com/@beachconcierge.ae"
+            ]
+        }
+        </script>
+
+        <!-- JSON-LD: WebApp -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "Beach Concierge Dubai — Order App",
+            "url": "https://beachconcierge.ae/",
+            "applicationCategory": "FoodDelivery",
+            "operatingSystem": "Any",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "AED" },
+            "browserRequirements": "Requires JavaScript",
+            "inLanguage": ["en","he","ar","ru","es","fr"]
+        }
+        </script>
+
+        <!-- JSON-LD: BreadcrumbList -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "Beach Concierge Dubai", "item": "https://beachconcierge.ae/" },
+                { "@type": "ListItem", "position": 2, "name": "Beach Menu", "item": "https://beachconcierge.ae/#menu" },
+                { "@type": "ListItem", "position": 3, "name": "VIP Experiences", "item": "https://beachconcierge.ae/#vip" }
+            ]
+        }
+        </script>
+
+        <!-- Preconnect for performance -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="preconnect" href="https://unpkg.com" />
+        <link rel="preconnect" href="https://i.postimg.cc" />
+
+        <!-- Leaflet CSS — Subresource Integrity (SRI) hash locks this to the
+             exact file we audited. Any CDN-level tampering (supply-chain
+             attack, compromised unpkg.com) causes the browser to refuse
+             loading the stylesheet, preventing CSS-based data exfiltration. -->
+        <link rel="stylesheet"
+              href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+              integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H"
+              crossorigin="anonymous" />
+
+        <!-- Google Fonts with font-display=swap -->
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;900&family=Rubik:wght@400;500;700;900&display=swap" rel="stylesheet" />
+
+        <!-- DNS prefetch for third-party domains -->
+        <link rel="dns-prefetch" href="//unpkg.com" />
+        <link rel="dns-prefetch" href="//www.youtube.com" />
+        <link rel="dns-prefetch" href="//i.postimg.cc" />
+        <!-- YouTube, Leaflet JS and auth SDKs are loaded lazily on demand -->
+
+    <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+<!-- Skip navigation for accessibility -->
+<a href="#app" class="skip-nav" style="position:absolute;top:-999px;left:-999px;background:var(--gold);color:var(--navy);padding:8px 16px;font-weight:700;border-radius:8px;z-index:99999;text-decoration:none;" onfocus="this.style.top='8px';this.style.left='8px';" onblur="this.style.top='-999px';this.style.left='-999px';">דלג לתוכן הראשי</a>
+
+<!-- SOS FAB -->
+<button id="sos-fab" onclick="openSosModal()" aria-label="פתח תפריט חירום SOS">🆘 SOS</button>
+
+<!-- VOICE ORDER FAB -->
+<button id="voice-fab" onclick="openVoiceOrdering()" aria-label="הזמנה קולית">🎙️</button>
+
+<!-- MODE FAB -->
+<button id="mode-fab" onclick="toggleDriverMode()" aria-label="החלף מצב שליח/לקוח" title="Driver Mode">🚗</button>
+
+<!-- SOS Modal -->
+<div id="sos-modal-overlay">
+    <div class="sos-sheet">
+        <div style="width:40px;height:4px;background:#dee2e8;border-radius:99px;margin:0 auto 18px;"></div>
+        <div class="sos-circle">🆘</div>
+        <h3 style="text-align:center;color:#e53935;margin:0 0 6px;font-size:18px;font-weight:900;">עזרה ראשונה / חירום</h3>
+        <p style="text-align:center;color:var(--muted);font-size:13px;margin:0 0 18px;">לחץ לחיוג מיידי</p>
+        <button class="sos-action sos-call" onclick="window.location.href='tel:101'">📞 מד"א — 101</button>
+        <button class="sos-action sos-call" onclick="window.location.href='tel:100'">👮 משטרה — 100</button>
+        <button class="sos-action sos-info">🩺 עזרה ראשונה — כוויות / בחילה</button>
+        <button class="btn-back" style="width:100%;margin-top:6px;" onclick="closeSosModal()">סגור</button>
+    </div>
+</div>
+
+    <div id="yt-player-container">
+        <div id="player"></div>
+    </div>
+
+    <div id="location-modal-overlay">
+        <div class="location-popup">
+            <div class="loc-icon-wrap">📍</div>
+            <div class="loc-title" id="locModalTitle">Enable Location</div>
+            <div class="loc-desc" id="locModalDesc">
+                To locate the customer's position and provide precise beach
+                delivery, please enable location services.
+            </div>
+            <button
+                class="btn-pill-primary"
+                style="width: 100%"
+                onclick="dismissLocationModal()"
+                id="locModalBtn"
+            >
+                Allow Access
+            </button>
+        </div>
+    </div>
+
+    <div id="upsell-modal-overlay">
+        <div class="upsell-popup">
+            <span class="upsell-tag" id="upsellTag"
+                >⭐ Special Offer</span
+            >
+            <h3
+                style="
+                    color: var(--navy);
+                    font-size: 18px;
+                    font-weight: 800;
+                    margin-bottom: 6px;
+                "
+                id="upsellTitle"
+            >
+                Complete Your Beach Setup
+            </h3>
+            <p
+                style="
+                    color: var(--muted);
+                    font-size: 13px;
+                    margin-bottom: 16px;
+                "
+                id="upsellDesc"
+            >
+                Add our Pure White Premium Beach Towel for only 45 AED?
+            </p>
+            <div
+                style="
+                    overflow: hidden;
+                    border-radius: 18px;
+                    height: 130px;
+                    margin-bottom: 18px;
+                    background: #f8fafc;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                "
+            >
+                <img
+                    src="https://m.media-amazon.com/images/I/91nVxzC0p6L._AC_UF894,1000_QL80_.jpg"
+                    style="
+                        max-height: 90%;
+                        max-width: 90%;
+                        object-fit: contain;
+                    "
+                />
+            </div>
+            <button
+                class="btn-pill-primary"
+                style="padding: 14px; font-size: 15px; margin-bottom: 8px"
+                onclick="acceptUpsellUpgrade()"
+                id="upsellAcceptBtn"
+            >
+                Yes, Add to Order
+            </button>
+            <button
+                class="btn-back"
+                style="font-size: 13px; margin: 0; width: 100%"
+                onclick="declineUpsellUpgrade()"
+                id="upsellDeclineBtn"
+            >
+                No, thank you
+            </button>
+        </div>
+    </div>
+
+    <!-- ══ MAP FULL-SCREEN MODAL ══ -->
+    <div id="map-modal-overlay">
+        <div class="map-modal-sheet">
+            <div class="map-modal-header">
+                <div>
+                    <div style="font-weight:800;font-size:16px;" id="mapModalTitle">📍 המיקום שלי</div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:2px;" id="mapModalSub">חוף דובאי</div>
+                </div>
+                <button class="map-modal-close-btn" onclick="closeMapModal()" aria-label="סגור מפה">✕</button>
+            </div>
+            <div class="map-modal-body">
+                <div id="map"></div>
+                <div id="manual-zone-picker" style="display:none;position:absolute;inset:0;z-index:10;padding:20px;background:var(--card-bg);overflow-y:auto;">
+                    <p style="font-size:14px;font-weight:800;margin-bottom:14px;color:var(--text);">📍 בחר אזור ידנית:</p>
+                    <button class="zone-opt" onclick="pickZone(this,'כניסה צפונית — שער A')">🏖️ כניסה צפונית — שער A</button>
+                    <button class="zone-opt" onclick="pickZone(this,'מרכז החוף — ליד המסעדה')">⛱️ מרכז החוף — ליד המסעדה</button>
+                    <button class="zone-opt" onclick="pickZone(this,'כניסה דרומית — שער C')">🏄 כניסה דרומית — שער C</button>
+                    <button class="zone-opt" onclick="pickZone(this,'בריכה — צד מזרח')">🏊 בריכה — צד מזרח</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="levels-modal-overlay">
+        <div class="levels-popup">
+            <div class="levels-header">
+                <h3
+                    style="
+                        font-weight: 900;
+                        letter-spacing: 1px;
+                        color: var(--gold);
+                    "
+                    id="levelsHeaderTitle"
+                >
+                    VIP CLUB LEVELS
+                </h3>
+                <p
+                    style="font-size: 12px; color: #cbd5e1; margin-top: 4px"
+                    id="levelsHeaderSub"
+                >
+                    Earn points with every purchase to level up
+                </p>
+            </div>
+            <div class="levels-list" id="levels-modal-list"></div>
+            <div
+                style="
+                    padding: 15px;
+                    border-top: 1px solid #eee;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                "
+            >
+                <button
+                    class="btn-pill-primary"
+                    style="
+                        padding: 12px 20px;
+                        font-size: 14px;
+                        width: auto;
+                        max-width: 120px;
+                        box-shadow: none;
+                    "
+                    onclick="closeLevelsModal()"
+                    id="levelsCloseBtn"
+                >
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="welcome-overlay">
+        <div id="splash-bg-layer"></div>
+        <div class="splash-bottom">
+            <div class="swipe-up-hint" id="swipeUpHint" onclick="enterAppDirectly()">
+                <div class="swipe-up-arrows"><i></i><i></i><i></i></div>
+                <div class="swipe-up-label" id="swipeUpLabel">החלק למעלה להיכנס</div>
+            </div>
+            <div class="welcome-buttons-alt" onclick="showSignUpScreen()" id="welcomeSignUpBtn">הירשם לשירות</div>
+        </div>
+    </div>
+
+    <div id="signup-screen">
+        <div class="signup-header">
+            <div
+                class="app-logo-wrap"
+                style="
+                    margin: 0 auto 16px;
+                    width: 80px;
+                    height: 80px;
+                    border-width: 2px;
+                "
+            >
+                <img
+                    src="https://i.postimg.cc/m2FK50jJ/IMG-2359.jpg"
+                    alt="App Logo"
+                    class="app-logo-img"
+                />
+            </div>
+            <h2 id="signUpTitle">Create Account</h2>
+            <p
+                style="
+                    color: var(--muted);
+                    font-size: 13px;
+                    margin-top: 4px;
+                "
+                id="signUpSub"
+            >
+                Join Beach Concierge & Earn Points
+            </p>
+        </div>
+        <div class="form-group">
+            <label id="labelFullName">Full Name</label>
+            <input
+                type="text"
+                id="reg-name"
+                placeholder="Enter your full name"
+            />
+        </div>
+        <div class="form-group">
+            <label id="labelPhone">Phone Number</label>
+            <input
+                type="tel"
+                id="reg-phone"
+                placeholder="+971 50 000 0000"
+            />
+        </div>
+        <div class="form-group" style="margin-top: 28px">
+            <button
+                class="btn-pill-primary"
+                onclick="submitSignUp()"
+                id="signUpSubmitBtn"
+            >
+                Continue with Phone Number
+            </button>
+        </div>
+
+        <div class="social-buttons-container">
+            <div class="social-divider" id="socialDividerText">
+                Or Quick Sign Up with
+            </div>
+
+            <div class="google-btn-wrapper">
+                <div
+                    id="g_id_onload"
+                    data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+                    data-context="signup"
+                    data-ux_mode="popup"
+                    data-callback="handleGoogleResponse"
+                    data-auto_prompt="false"
+                ></div>
+                <div
+                    class="g_id_signin"
+                    data-type="standard"
+                    data-shape="pill"
+                    data-theme="outline"
+                    data-text="signup_with"
+                    data-size="large"
+                    data-logo_alignment="left"
+                    data-width="320"
+                ></div>
+            </div>
+
+            <div style="width: 100%; max-width: 320px; margin: 0 auto">
+                <div
+                    class="apple-btn-mock"
+                    onclick="completeSocialRegistration()"
+                >
+                    <span style="font-size: 18px"></span> Sign up with
+                    Apple
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <button
+                class="btn-back"
+                style="width: 100%; margin-top: 24px"
+                onclick="hideSignUpScreen()"
+                id="signUpCancelBtn"
+            >
+                Cancel
+            </button>
+        </div>
+    </div>
+
+    <main id="app">
+        <header>
+            <div class="lang-selector-wrapper">
+                <button class="lang-btn" onclick="toggleLangMenu()" aria-label="שינוי שפה" aria-haspopup="true">
+                    🌐
+                </button>
+                <div class="lang-dropdown" id="langDropdown" role="menu" aria-label="בחירת שפה">
+                    <button role="menuitem" onclick="changeLanguage('he')" lang="he">עברית</button>
+                    <button role="menuitem" onclick="changeLanguage('en')" lang="en">English</button>
+                    <button role="menuitem" onclick="changeLanguage('ru')" lang="ru">Русский</button>
+                    <button role="menuitem" onclick="changeLanguage('ar')" lang="ar">العربية</button>
+                    <button role="menuitem" onclick="changeLanguage('es')" lang="es">Español</button>
+                    <button role="menuitem" onclick="changeLanguage('fr')" lang="fr">Français</button>
+                </div>
+            </div>
+
+            <div class="app-logo-wrap">
+                <img
+                    src="https://i.postimg.cc/m2FK50jJ/IMG-2359.jpg"
+                    alt="Beach Concierge Dubai — VIP Beach Delivery Logo"
+                    class="app-logo-img"
+                    fetchpriority="high"
+                    width="72"
+                    height="72"
+                />
+            </div>
+            <h1 class="brand-tagline" style="font-size:inherit;font-weight:inherit;margin:0;">VIP BEACH CONCIERGE</h1>
+            <div class="glass-widget live-clock" id="live-time">
+                Loading...
+            </div>
+
+            <div>
+                <div class="glass-widget weather-banner">
+                    <span id="weatherDubai">☀️ Dubai: 31°C</span>
+                    <span id="weatherWater">🌊 Gulf Water: 27°C</span>
+                    <span id="weatherWaves">🏄‍♂️ Waves: 0.2m (Calm)</span>
+                </div>
+            </div>
+            <div id="uv-card" class="uv-high">
+                <div class="uv-icon">☀️</div>
+                <div class="uv-mid">
+                    <div class="uv-number" id="uv-index-val">8</div>
+                    <div class="uv-word">UV Index</div>
+                </div>
+                <div class="uv-right-col">
+                    <span class="uv-level-tag" id="uv-level-tag">HIGH</span>
+                    <div class="uv-rec-text" id="uv-rec">SPF 30-50 Recommended</div>
+                    <div class="uv-scale"><div class="uv-scale-fill" id="uv-scale-fill" style="width:70%"></div></div>
+                    <button class="uv-action-btn" id="uv-action-btn" onclick="quickAddRec(21,'v_stick',this)">🧴 Add Sunscreen to Cart</button>
+                </div>
+            </div>
+        </header>
+
+
+        <div class="dashboard-card radio-section">
+            <div class="radio-title-wrapper">
+                <div class="radio-title" id="radioWidgetTitle">
+                    🎵 Beach Radio Station
+                </div>
+                <div class="radio-player-control">
+                    <button
+                        class="stop-button"
+                        style="
+                            width: 36px;
+                            height: 36px;
+                            background: var(--stop-btn-bg);
+                            border: none;
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            cursor: pointer;
+                        "
+                        onclick="stopRadio()"
+                        id="radioStopBtn"
+                        title="Stop"
+                        aria-label="עצור רדיו"
+                    >
+                        <div
+                            style="
+                                width: 10px;
+                                height: 10px;
+                                background: white;
+                                border-radius: 1px;
+                            "
+                        ></div>
+                    </button>
+                </div>
+            </div>
+            <div class="radio-options">
+                <button
+                    id="rad-0"
+                    class="radio-btn active"
+                    onclick="switchRadioStation(0)"
+                >
+                    Latin Song
+                </button>
+                <button
+                    id="rad-1"
+                    class="radio-btn"
+                    onclick="switchRadioStation(1)"
+                >
+                    Techno
+                </button>
+                <button
+                    id="rad-2"
+                    class="radio-btn"
+                    onclick="switchRadioStation(2)"
+                >
+                    Pop
+                </button>
+                <button
+                    id="rad-3"
+                    class="radio-btn"
+                    onclick="switchRadioStation(3)"
+                >
+                    Arabic Song
+                </button>
+            </div>
+        </div>
+
+        <div class="status-alert-box paused" id="statusAlertBox">
+            🔒 Service Currently Paused<br />
+            <span
+                style="font-weight: 500; font-size: 12px; opacity: 0.9"
+                id="statusAlertSub"
+                >We are sorry, there is no available courier right now to
+                accept orders.</span
+            >
+        </div>
+
+        
+    <!-- GRID MATRIX BADGE -->
+    <div id="grid-badge" class="grid-badge" style="display:none;">
+        <span class="grid-badge-dot"></span>
+        <span>📍 </span><span class="grid-badge-val" id="grid-id-val">BEACH-??</span>
+        <span class="grid-badge-acc" id="grid-acc-val"></span>
+    </div>
+
+    <!-- HYDRATION TRACKER -->
+    <div class="hydration-bar" id="hydration-bar" onclick="openHydrationOrder()" style="display:none;">
+        <span class="hydration-icon">💧</span>
+        <div class="hydration-info">
+            <div class="hydration-title" id="hydration-title">מעקב שתייה</div>
+            <div class="hydration-sub" id="hydration-sub">זמן בשמש: 0 דקות</div>
+            <div class="hydration-track"><div class="hydration-fill" id="hydration-fill" style="width:0%"></div></div>
+        </div>
+        <span id="hydration-cta" style="font-size:12px;font-weight:800;color:#3b82f6;white-space:nowrap;">💦 הזמן מים</span>
+    </div>
+
+        <div class="quest-box">
+            <div class="quest-icon">⚡</div>
+            <div class="quest-details">
+                <h4 id="questTitle">Daily Quest Activated</h4>
+                <p id="questDesc">
+                    Order between 8:00 - 11:00 AM to get +50 Extra Points!
+                </p>
+            </div>
+        </div>
+
+        <!-- ORDER PROGRESS (מוצג אחרי ביצוע הזמנה) -->
+        <div id="order-progress-section">
+            <div class="prog-title">📦 מצב ההזמנה שלך</div>
+            <div class="prog-steps">
+                <div class="prog-line" id="prog-line"></div>
+                <div class="prog-dot active" id="pdot-0">✓</div>
+                <div class="prog-dot" id="pdot-1">⚙</div>
+                <div class="prog-dot" id="pdot-2">🛵</div>
+                <div class="prog-dot" id="pdot-3">📍</div>
+                <div class="prog-dot" id="pdot-4">🎉</div>
+            </div>
+            <div class="prog-labels">
+                <span>אושרה</span><span>מוכנה</span><span>בדרך</span><span>קרוב</span><span>נמסרה!</span>
+            </div>
+        </div>
+
+        <!-- ORDER HISTORY -->
+        <div id="order-history-section">
+            <div class="history-title">📋 הזמנות קודמות</div>
+            <div id="order-history-list"></div>
+        </div>
+
+        <div class="split-card">
+            <!-- Compact map card — click opens full map modal -->
+            <div class="split-map-wrap" onclick="openMapModal()" role="button" tabindex="0" aria-label="פתח מפה">
+                <div class="compact-card-icon">🗺️</div>
+                <div class="compact-card-info">
+                    <div class="compact-card-title" id="compact-location-title">מיקום החוף</div>
+                    <div class="compact-card-sub" id="compact-location-sub">לחץ לצפייה במפה</div>
+                </div>
+                <div class="compact-card-arrow">›</div>
+            </div>
+
+            <!-- Compact level card — click opens levels modal -->
+            <div class="split-level-wrap" onclick="openLevelsModal()" role="button" tabindex="0" aria-label="פתח רמות VIP">
+                <img class="compact-avatar" id="live-widget-avatar"
+                    src="https://i.postimg.cc/zBjcnNJp/IMG-2506.jpg"
+                    alt="Current Level Avatar" loading="lazy" />
+                <div class="compact-card-info">
+                    <div class="compact-card-title" id="current-tier-display" style="color:#fff;">Badawi</div>
+                    <div class="compact-card-sub" style="color:#94a3b8;">
+                        <span id="user-pts-display">0</span> / <span id="next-tier-max-display">250</span> PTS
+                    </div>
+                    <div class="compact-mini-progress">
+                        <div class="compact-mini-bar" id="progress-bar-fill" style="width:0%"></div>
+                    </div>
+                </div>
+                <div class="compact-card-arrow" style="color:var(--gold);">›</div>
+            </div>
+        </div>
+
+        <div class="category-scroll-container">
+            <div
+                class="category-chip active"
+                onclick="scrollToCategory('labelMenuStandard', this)"
+            >
+                🍦 <span id="cat1">Catalog</span>
+            </div>
+            <div
+                class="category-chip"
+                onclick="scrollToCategory('labelMenuVip', this)"
+            >
+                👑 <span id="cat2">Equipment</span>
+            </div>
+            <div
+                class="category-chip"
+                onclick="scrollToCategory('labelMenuServices', this)"
+            >
+                💎 <span id="cat3">Experiences</span>
+            </div>
+        </div>
+
+        <div id="smart-rec-section"></div>
+
+        <div class="menu-label" id="labelMenuStandard">Our Menu</div>
+        <div class="grid" id="product-grid"></div>
+
+        <div class="menu-label" style="margin-top: 8px" id="labelMenuVip">
+            👑 Monthly Special — Luxury Equipment
+        </div>
+        <div class="grid" id="vip-grid"></div>
+
+        <div class="menu-label" style="margin-top: 8px">☀️ Bundle Deals — Best Value</div>
+        <div class="bundle-grid" id="bundle-grid"></div>
+
+        <div
+            class="menu-label"
+            style="margin-top: 8px"
+            id="labelMenuServices"
+        >
+            💎 Premium Experiences & Services
+        </div>
+        <div class="grid bottom-padding" id="services-grid"></div>
+
+        
+        <!-- DISCOVER SECTION (shown when Discover nav tab active) -->
+        <div id="discover-section">
+            <div class="discover-section-title">🌟 גלה עוד</div>
+            <div class="discover-grid">
+                <div class="discover-card" onclick="openBeachSocial()">
+                    <div class="dc-icon">💬</div>
+                    <div class="dc-title">Beach Social</div>
+                    <div class="dc-sub">צ'אט שכנות</div>
+                    <span class="dc-badge">חדש</span>
+                </div>
+                <div class="discover-card" onclick="openSendDrink()">
+                    <div class="dc-icon">🥤</div>
+                    <div class="dc-title">שלח משקה</div>
+                    <div class="dc-sub">לפי Grid-ID</div>
+                </div>
+                <div class="discover-card" onclick="openGameFinder()">
+                    <div class="dc-icon">🏐</div>
+                    <div class="dc-title">Pick-up Games</div>
+                    <div class="dc-sub">מצא משחקים</div>
+                </div>
+                <div class="discover-card" onclick="openGoldenRobot()">
+                    <div class="dc-icon">🤖</div>
+                    <div class="dc-title">Golden Robot</div>
+                    <div class="dc-sub">צייד פרסים</div>
+                    <span class="dc-badge" style="background:#f59e0b;">100 AED</span>
+                </div>
+                <div class="discover-card" onclick="openNoiseModal()">
+                    <div class="dc-icon">📊</div>
+                    <div class="dc-title">מד רעש</div>
+                    <div class="dc-sub">מצא אזור שקט</div>
+                </div>
+                <div class="discover-card" onclick="openTanScanner()">
+                    <div class="dc-icon">🌿</div>
+                    <div class="dc-title">Tan Scanner</div>
+                    <div class="dc-sub">AI קרם שמש</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-footer" id="pageFooter">
+            © 2026 Beach Concierge. All Rights Reserved.
+        </div>
+    </main>
+
+    <div id="cart-bar" onclick="openCheckout()">
+        <div class="cart-left">
+            <span id="cartBarText"
+                >🛒 View Cart · <strong id="cart-total">0 AED</strong></span
+            >
+        </div>
+        <div class="cart-badge" id="cart-count">0</div>
+    </div>
+
+    <div class="sticky-bottom-nav">
+        <div
+            class="nav-item active"
+            onclick="exitDiscoverIfNeeded(); window.scrollTo({top: 0, behavior: 'smooth'}); selectNav(this);"
+        >
+            <span class="nav-icon">🏖️</span>
+            <span id="navHome">Dashboard</span>
+        </div>
+        <div
+            class="nav-item"
+            onclick="exitDiscoverIfNeeded(); scrollToCategory('labelMenuStandard'); selectNav(this);"
+        >
+            <span class="nav-icon">📜</span>
+            <span id="navMenu">Menu</span>
+        </div>
+        <div class="nav-item" onclick="exitDiscoverIfNeeded(); openCheckout(); selectNav(this);">
+            <span class="nav-icon">🛒</span>
+            <span id="navCart">Cart</span>
+            <div
+                class="nav-bubble"
+                id="navCartBubble"
+                style="display: none"
+            >
+                0
+            </div>
+        </div>
+        <div
+            class="nav-item"
+            onclick="exitDiscoverIfNeeded(); openConciergeChat(); selectNav(this);"
+        >
+            <span class="nav-icon">💬</span>
+            <span id="navChat">Chat</span>
+        </div>
+        <div class="nav-item" onclick="openDiscoverTab(); selectNav(this);">
+            <span class="nav-icon">✨</span>
+            <span>Discover</span>
+        </div>
+        <div class="nav-item nav-sos" onclick="openSosModal();">
+            <span class="nav-icon">🆘</span>
+            <span>SOS</span>
+        </div>
+    </div>
+
+    <div id="checkout-modal">
+        <div class="modal-sheet">
+            <div class="sheet-handle"></div>
+            <div class="sheet-header">
+                <h3 id="checkoutTitle">Order Summary</h3>
+                <p
+                    style="color: #ff3b30; font-weight: 600"
+                    id="checkoutPausedMsg"
+                >
+                    ⚠️ Orders cannot be placed at this time.
+                </p>
+            </div>
+            <div class="order-items" id="order-list"></div>
+            <div class="fee-row">
+                <span id="checkoutServiceFeeLabel">Service Fee</span
+                ><span>7 AED</span>
+            </div>
+            <div class="total-row">
+                <span
+                    style="font-weight: 700; color: var(--navy)"
+                    id="checkoutTotalLabel"
+                    >Total Amount</span
+                ><span
+                    style="
+                        font-weight: 900;
+                        font-size: 24px;
+                        color: var(--navy);
+                    "
+                    id="final-price"
+                    >0 AED</span
+                >
+            </div>
+            <!-- GROUP ORDER / SPLIT BILL -->
+            <div class="checkout-extras">
+                <div class="extras-block">
+                    <span class="extras-label">👥 הזמנה קבוצתית — חלוקת חשבון</span>
+                    <div class="split-row">
+                        <button class="split-btn" onclick="changeSplit(-1)">−</button>
+                        <span id="split-num">1</span>
+                        <span style="font-size:13px;color:var(--muted);font-weight:600;">אנשים</span>
+                        <button class="split-btn" onclick="changeSplit(1)">+</button>
+                    </div>
+                    <div id="per-person-amt"></div>
+                </div>
+                <div class="extras-block">
+                    <span class="extras-label">💳 אמצעי תשלום</span>
+                    <div class="pay-opts">
+                        <button class="pay-opt chosen" id="pay-cash" onclick="pickPayment('cash',this)">💵 מזומן</button>
+                        <button class="pay-opt" id="pay-card" onclick="pickPayment('card',this)">💳 כרטיס</button>
+                        <button class="pay-opt" id="pay-wallet" onclick="pickPayment('wallet',this)">🏦 ארנק</button>
+                    </div>
+                    <div id="wallet-info">
+                        <div class="wlbl">יתרת ארנק</div>
+                        <div class="wbal" id="wallet-balance-display">₪ 280.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="id-section">
+                <label
+                    style="
+                        font-weight: 700;
+                        margin-bottom: 6px;
+                        display: block;
+                        color: var(--navy);
+                    "
+                    id="checkoutLocationLabel"
+                    >📍 Where are you on the beach?</label
+                >
+                <textarea
+                    id="id-sign"
+                    rows="2"
+                    placeholder="Service paused"
+                    disabled
+                ></textarea>
+            </div>
+
+            <button
+                class="btn-confirm-disabled"
+                disabled
+                id="checkoutConfirmBtn"
+            >
+                ❌ Ordering Unavailable (No Active Courier)
+            </button>
+            <button
+                class="btn-confirm-active"
+                id="checkoutConfirmActiveBtn"
+                onclick="triggerOrderSuccess()"
+            >
+                ✨ Place Order Now
+            </button>
+
+            <button
+                class="btn-back"
+                onclick="closeCheckout()"
+                id="checkoutBackBtn"
+            >
+                Back to Menu
+            </button>
+        </div>
+    </div>
+
+    <div id="chat-modal-screen">
+        <div class="chat-header-bar">
+            <div class="chat-agent-info">
+                <img
+                    src="https://i.postimg.cc/zBjcnNJp/IMG-2506.jpg"
+                    class="chat-agent-avatar"
+                    alt="Concierge Agent"
+                />
+                <div>
+                    <div class="chat-agent-name">Rashid (Beach Support)</div>
+                    <div class="chat-agent-status">
+                        ● <span id="chatOnlineTxt">Online</span>
+                    </div>
+                </div>
+            </div>
+            <button class="chat-close-btn" onclick="closeConciergeChat()">
+                ✕
+            </button>
+        </div>
+        <div class="chat-messages-container" id="chatMessagesBox">
+            <div class="chat-msg agent">
+                Welcome to Beach Concierge Support. How can I assist you with your beach order today?
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input
+                type="text"
+                class="chat-input-box"
+                id="chatUserInput"
+                placeholder="Type a message..."
+            />
+            <button class="chat-send-btn" onclick="sendChatMessage()">
+                ➔
+            </button>
+        </div>
+    </div>
+
+    <script src="./script.js" defer></script>
+<!-- VOICE ORDER MODAL -->
+<div id="voice-modal-overlay">
+    <div class="voice-sheet">
+        <div style="width:38px;height:4px;background:var(--border);border-radius:99px;margin:0 auto 18px;"></div>
+        <div id="voice-ring" class="voice-ring">🎙️</div>
+        <div id="voice-status-text"></div>
+        <div id="voice-transcript-box"></div>
+        <button id="voice-mic-btn" onclick="startVoiceListening()">🎙️ דבר עכשיו</button>
+        <div class="voice-confirm-list">
+            <div class="voice-confirm-title">✅ זוהו בהזמנה:</div>
+            <div id="voice-confirm-chips"></div>
+        </div>
+        <div class="voice-btn-row" style="display:none;">
+            <button class="voice-btn-confirm" onclick="confirmVoiceOrder()">✅ אשר והוסף לעגלה</button>
+            <button class="voice-btn-cancel" onclick="cancelVoiceOrder()">✗ ביטול</button>
+        </div>
+        <button onclick="closeVoiceModal()" style="width:100%;padding:11px;background:none;border:none;color:var(--muted);font-size:14px;font-weight:700;cursor:pointer;margin-top:8px;">סגור</button>
+    </div>
+</div>
+
+<!-- ORDER SUCCESS MODAL -->
+<div id="order-success-overlay">
+    <div class="success-modal-box">
+        <span class="success-emoji">🎉</span>
+        <div class="success-title" id="successTitle">ההזמנה נשלחה!</div>
+        <div class="success-sub" id="successSub">השליח שלנו בדרך אליך. צפה להגעה תוך 10-15 דקות.</div>
+        <button class="success-close-btn" onclick="closeOrderSuccess()">תודה!</button>
+    </div>
+</div>
+
+
+<!-- DRIVER MODE PANEL -->
+<div id="driver-panel">
+    <div class="driver-topbar">
+        <div class="driver-title">🚗 DRIVER MODE</div>
+        <button class="driver-close" onclick="toggleDriverMode()">← Client</button>
+    </div>
+    <div class="driver-grid-badge" id="driver-grid-display">BEACH-??</div>
+
+    <div style="display:flex;gap:24px;align-items:flex-start;justify-content:center;width:100%;max-width:480px;padding:0 20px 8px;">
+        <div style="text-align:center;">
+            <div style="font-size:11px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">מצפן</div>
+            <div class="compass-wrap">
+                <div class="compass-outer">
+                    <div class="compass-labels">
+                        <span class="cn">N</span><span class="cs">S</span>
+                        <span class="cw">W</span><span class="ce">E</span>
+                    </div>
+                    <div class="compass-arrow" id="compass-arrow"></div>
+                    <div class="compass-deg" id="compass-deg">0°</div>
+                </div>
+            </div>
+        </div>
+        <div style="text-align:center;">
+            <div style="font-size:11px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">רדאר</div>
+            <div class="radar-wrap">
+                <div class="radar-outer">
+                    <div class="radar-sweep"></div>
+                    <div class="radar-blip" id="radar-blip" style="top:38%;left:55%;"></div>
+                </div>
+            </div>
+            <div class="radar-dist" id="radar-dist">--</div>
+        </div>
+    </div>
+
+    <div class="driver-orders-title">תורים פעילים</div>
+    <div class="driver-order-card">
+        <div class="driver-card-inner">
+            <div class="doc-header">
+                <span class="doc-grid">BEACH-A5</span>
+                <span class="doc-status">ממתין</span>
+            </div>
+            <div class="doc-items">🍦 גלידה x2 · 💧 מים x1 · 🧴 קרם x1</div>
+            <button class="doc-nav-btn" onclick="alert('מנווט לכיוון BEACH-A5')">🗺️ נווט לכאן</button>
+        </div>
+    </div>
+    <div class="driver-order-card">
+        <div class="driver-card-inner">
+            <div class="doc-header">
+                <span class="doc-grid">BEACH-C12</span>
+                <span class="doc-status" style="background:rgba(251,191,36,0.15);color:#f59e0b;">חדש</span>
+            </div>
+            <div class="doc-items">🥤 ענרגי x3 · 🍿 חטיפים x2</div>
+            <button class="doc-nav-btn" onclick="alert('מנווט לכיוון BEACH-C12')">🗺️ נווט לכאן</button>
+        </div>
+    </div>
+</div>
+
+<!-- BEACH SOCIAL MODAL -->
+<div id="beach-social-modal">
+    <div class="social-sheet">
+        <div class="social-header">
+            <div class="social-header-left">
+                <span style="font-size:20px;">💬</span>
+                <div>
+                    <div class="social-header-title">Beach Social</div>
+                    <div class="social-grid-tag" id="social-grid-tag">BEACH-??</div>
+                </div>
+            </div>
+            <button class="social-close" onclick="closeBeachSocial()">✕</button>
+        </div>
+        <div class="social-messages" id="social-messages">
+            <div class="chat-msg other">
+                <div class="chat-bubble">🌊 ים מדהים היום! מישהו רוצה לשחק מטקות?</div>
+                <div class="chat-meta">BEACH-A3 · לפני 5 דק׳</div>
+            </div>
+            <div class="chat-msg other">
+                <div class="chat-bubble">👋 יש מישהו ליד BEACH-B7? מחפש צל</div>
+                <div class="chat-meta">BEACH-B7 · לפני 2 דק׳</div>
+            </div>
+        </div>
+        <div class="social-input-row">
+            <input type="text" class="social-input" id="social-input" placeholder="כתוב הודעה לשכניך..." />
+            <button class="social-send-btn" onclick="sendSocialMessage()">↑</button>
+        </div>
+    </div>
+</div>
+
+<!-- SEND A DRINK MODAL -->
+<div id="send-drink-modal">
+    <div class="send-drink-box">
+        <div class="send-drink-title">🥤 שלח משקה</div>
+        <div class="send-drink-sub">הזן ידנית או בחר מהמפה</div>
+        <input type="text" class="grid-id-input" id="send-grid-input" placeholder="BEACH-A5" maxlength="10" oninput="this.value=this.value.toUpperCase()" />
+        <div class="bgm-toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'':'none';this.textContent=this.textContent.includes('▼')?'🗺️ הראה מפת אזורים ▼':'🗺️ הסתר מפה ▲'">🗺️ הראה מפת אזורים ▼</div>
+        <div class="bgm-wrap" style="display:none;">
+            <div id="beach-grid-map" class="beach-grid-map"></div>
+        </div>
+        <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px;">בחר מה לשלוח:</div>
+        <div class="drink-picker" id="drink-picker">
+            <div class="drink-chip" onclick="selectDrink(this,'💧 מים')">💧 מים</div>
+            <div class="drink-chip" onclick="selectDrink(this,'🥤 ענרגי')">🥤 ענרגי</div>
+            <div class="drink-chip" onclick="selectDrink(this,'🍦 גלידה')">🍦 גלידה</div>
+            <div class="drink-chip" onclick="selectDrink(this,'🧃 מיץ')">🧃 מיץ</div>
+            <div class="drink-chip" onclick="selectDrink(this,'☕ קפה')">☕ קפה</div>
+        </div>
+        <button class="send-confirm-btn" onclick="confirmSendDrink()">✨ שלח עכשיו — 15 AED</button>
+        <button onclick="closeSendDrink()" style="width:100%;padding:11px;background:none;border:none;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;">ביטול</button>
+    </div>
+</div>
+
+<!-- GAME FINDER MODAL -->
+<div id="game-finder-modal">
+    <div class="game-sheet">
+        <div style="width:40px;height:4px;background:#dee2e8;border-radius:99px;margin:0 auto 18px;"></div>
+        <div style="padding:0 16px 16px;font-size:18px;font-weight:900;color:var(--navy);">🏐 Pick-up Games</div>
+        <div class="game-card">
+            <div class="game-icon">🏓</div>
+            <div class="game-info">
+                <div class="game-title">מטקות — כולם מוזמנים</div>
+                <div class="game-meta">📍 ליד BEACH-D4 · 👥 3/6 משתתפים · עכשיו</div>
+            </div>
+            <button class="game-join-btn" onclick="joinGame(this)">הצטרף</button>
+        </div>
+        <div class="game-card">
+            <div class="game-icon">🏐</div>
+            <div class="game-info">
+                <div class="game-title">כדורעף חופים</div>
+                <div class="game-meta">📍 ליד BEACH-B2 · 👥 4/8 משתתפים · 17:00</div>
+            </div>
+            <button class="game-join-btn" onclick="joinGame(this)">הצטרף</button>
+        </div>
+        <div class="game-card">
+            <div class="game-icon">🏄</div>
+            <div class="game-info">
+                <div class="game-title">גלישה קבוצתית</div>
+                <div class="game-meta">📍 BEACH-F1 · 👥 2/5 · 16:30 · ₪ חינם</div>
+            </div>
+            <button class="game-join-btn" onclick="joinGame(this)">הצטרף</button>
+        </div>
+        <div class="game-card">
+            <div class="game-icon">🃏</div>
+            <div class="game-info">
+                <div class="game-title">קלפים בצל — ברידג' / פוקר</div>
+                <div class="game-meta">📍 BEACH-A8 · 👥 2/4 · כל היום</div>
+            </div>
+            <button class="game-join-btn" onclick="joinGame(this)">הצטרף</button>
+        </div>
+        <div class="game-host-strip" onclick="hostGame()">+ ארגן משחק שלך</div>
+        <div style="height:40px;"></div>
+    </div>
+</div>
+
+<!-- GOLDEN ROBOT MODAL -->
+<div id="golden-robot-modal">
+    <div class="robot-box">
+        <span class="robot-emoji">🤖</span>
+        <div class="robot-title">מצא את הרובוט הזהוב!</div>
+        <div class="robot-clue" id="robot-clue">הרובוט הזהוב נחבא בתא גריד מיוחד. הגע לשם ראשון וקבל <strong style="color:var(--gold);">100 AED</strong> קרדיט!</div>
+        <div class="robot-grid-target" id="robot-target-grid">BEACH-G3</div>
+        <div class="robot-prize-wrap" id="robot-prize-found">
+            <div style="font-size:24px;margin-bottom:8px;">🎉</div>
+            <div style="font-size:16px;font-weight:900;color:#22c55e;">כל הכבוד! מצאת אותו!</div>
+            <div style="font-size:13px;color:#15803d;margin-top:4px;">100 AED קרדיט יתווספו לחשבונך</div>
+        </div>
+        <button class="robot-checkin-btn" id="robot-checkin-btn" onclick="robotCheckIn()">📍 אני כאן! Check-in</button>
+        <div class="robot-close-link" onclick="closeGoldenRobot()">סגור</div>
+    </div>
+</div>
+
+<!-- NOISE MONITOR MODAL -->
+<div id="noise-modal">
+    <div class="noise-box">
+        <div class="noise-title">📊 מד רעש חוף</div>
+        <div class="noise-sub">מדוד את רמת הרעש באזורך ומצא אזור שקט</div>
+        <div class="noise-meter-wrap">
+            <svg class="noise-arc-svg" viewBox="0 0 160 90">
+                <path d="M 10 88 A 70 70 0 0 1 150 88" fill="none" stroke="#e2e8f0" stroke-width="12" stroke-linecap="round"/>
+                <path d="M 10 88 A 70 70 0 0 1 57 22" fill="none" stroke="#22c55e" stroke-width="12" stroke-linecap="round"/>
+                <path d="M 57 22 A 70 70 0 0 1 103 22" fill="none" stroke="#facc15" stroke-width="12" stroke-linecap="round"/>
+                <path d="M 103 22 A 70 70 0 0 1 150 88" fill="none" stroke="#ef4444" stroke-width="12" stroke-linecap="round"/>
+            </svg>
+            <div class="noise-needle" id="noise-needle"></div>
+        </div>
+        <div id="noise-db-val">-- dB</div>
+        <div id="noise-zone-label" style="color:var(--muted);">לחץ "התחל" למדידה</div>
+        <div class="noise-bars" id="noise-bars">
+            <div class="noise-bar-item" style="height:8px;"></div><div class="noise-bar-item" style="height:12px;"></div>
+            <div class="noise-bar-item" style="height:8px;"></div><div class="noise-bar-item" style="height:16px;"></div>
+            <div class="noise-bar-item" style="height:10px;"></div><div class="noise-bar-item" style="height:8px;"></div>
+            <div class="noise-bar-item" style="height:14px;"></div><div class="noise-bar-item" style="height:8px;"></div>
+        </div>
+        <button class="noise-ctrl-btn" id="noise-ctrl-btn" onclick="toggleNoiseMonitor()">🎙️ התחל מדידה</button>
+        <button class="noise-submit-btn" id="noise-submit-btn" onclick="submitNoiseReading()" style="display:none;">📍 שתף רעש — BEACH-??</button>
+        <button id="noise-map-toggle-btn" onclick="toggleNoiseMap()" class="noise-map-toggle-btn">🗺️ מפת רעש החוף</button>
+        <div id="noise-map-area" style="display:none;margin-top:12px;"></div>
+        <button class="noise-close-btn" onclick="closeNoiseModal()">סגור</button>
+    </div>
+</div>
+
+<!-- TAN SCANNER MODAL -->
+<div id="tan-scanner-modal">
+    <div class="tan-sheet">
+        <div style="width:40px;height:4px;background:#dee2e8;border-radius:99px;margin:0 auto 18px;"></div>
+        <div style="font-size:18px;font-weight:900;color:var(--navy);margin-bottom:6px;">🌿 AI Tan Scanner</div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:16px;">סרוק את גוון עורך לקבלת המלצות מותאמות אישית</div>
+        <div class="tan-camera-preview" id="tan-cam-preview">
+            <video id="tan-video" autoplay playsinline muted></video>
+            <span class="tan-cam-placeholder" id="tan-cam-placeholder">📸</span>
+            <div class="tan-scan-ring" id="tan-scan-ring" style="display:none;"></div>
+        </div>
+        <button class="tan-scan-btn" id="tan-scan-btn" onclick="startTanScan()">📸 הפעל מצלמה וסרוק</button>
+        <div class="tan-result-area" id="tan-result-area">
+            <div class="tan-result-title">✨ תוצאת הסריקה</div>
+            <div class="tan-tone-display" id="tan-tone-bar"></div>
+            <div class="tan-tone-label" id="tan-tone-label"></div>
+            <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px;">המלצות מוצרים:</div>
+            <div class="tan-recs" id="tan-recs"></div>
+        </div>
+        <button onclick="closeTanScanner()" style="width:100%;padding:12px;background:none;border:none;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;margin-top:12px;">סגור</button>
+    </div>
+</div>
+
+</body>
+
+</html>
